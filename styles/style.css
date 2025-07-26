@@ -221,7 +221,7 @@ input[type="number"]:focus {
 }
 .button-restart:hover,
 .button-forward:hover {
-    background-color: #da6a48;
+    background-color: #e77c5b;
 }
 .button-restart:hover svg,
 .button-forward:hover svg {
@@ -244,5 +244,21 @@ input[type="number"]:focus {
     justify-content: center;
 }
 .button-start:hover {
-    background-color: #144c70;
+    background-color: #166b8f;
+}
+.button-restart.shrink,
+.button-forward.shrink {
+    animation: shrinkAnim 250ms ease-in-out;
+}
+
+@keyframes shrinkAnim {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

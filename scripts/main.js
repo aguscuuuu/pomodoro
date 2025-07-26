@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
     // elementos del dom
     const dateElement = document.querySelector('.date');
     const dayElement = document.querySelector('.day');
@@ -23,27 +22,57 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRunning = false;
     let timeRemaining = getInputMinutes(durationInput) * 60;
 
-    // inicializa el sonido de alarma
     sonido.load();
-
-    // inicializa el reloj, fecha y estado del botón
     iconSpan.innerHTML = svgPlay;
     updateClock();
     updateDateTime();
 
-    // agrega los event listeners
+    // eventos
     startButton.addEventListener('click', toggleTimer);
-    restartButton.addEventListener('click', restartTimer);
-    forwardButton.addEventListener('click', skipMode);
+    restartButton.addEventListener('click', () => {
+        animarBoton(restartButton);
+        restartTimer();
+    });
+    forwardButton.addEventListener('click', () => {
+        animarBoton(forwardButton);
+        skipMode();
+    }); 
+
     durationInput.addEventListener('input', () => {
-        limitarLargoInput(durationInput);
-        limitarValor(durationInput, 50);
+        // Limitar longitud a 2 caracteres
+        if (durationInput.value.length > 2) {
+            durationInput.value = durationInput.value.slice(0, 2);
+        }
+
+        // Limitar máximo 50
+        const val = parseInt(durationInput.value, 10);
+        if (!isNaN(val) && val > 50) {
+            durationInput.value = '50';
+        }
+
+        // Permitimos que el campo quede vacío para que el usuario escriba
+        // Solo actualizamos el reloj si no está corriendo y es modo pomodoro
+        if (!isRunning && isWorking && durationInput.value !== '') {
+            timeRemaining = getInputMinutes(durationInput) * 60;
+            updateClock();
+            actualizarFondo();
+        }
+    });
+
+    durationInput.addEventListener('blur', () => {
+        // Al perder foco, corregir valor a mínimo 1 si está vacío o menor a 1
+        const val = parseInt(durationInput.value, 10);
+        if (isNaN(val) || val < 1) {
+            durationInput.value = '1';
+        }
+
         if (!isRunning && isWorking) {
             timeRemaining = getInputMinutes(durationInput) * 60;
             updateClock();
             actualizarFondo();
         }
     });
+
     breakInput.addEventListener('input', () => {
         limitarLargoInput(breakInput);
         limitarValor(breakInput, 25);
@@ -53,16 +82,21 @@ document.addEventListener('DOMContentLoaded', () => {
             actualizarFondo();
         }
     });
+
     durationInput.addEventListener('keydown', bloquearCaracteresInvalidos);
     durationInput.addEventListener('paste', validarPegado);
     breakInput.addEventListener('keydown', bloquearCaracteresInvalidos);
     breakInput.addEventListener('paste', validarPegado);
 
-    // inicia o pausa el temporizador
     function toggleTimer() {
+        const minutos = isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput);
+        if (minutos === 0) {
+            return;
+        }
+
         if (!isRunning) {
             if (timeRemaining === 0) {
-                timeRemaining = (isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput)) * 60;
+                timeRemaining = minutos * 60;
             }
             isRunning = true;
             actualizarFondo();
@@ -76,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // reinicia el temporizador actual
     function restartTimer() {
         clearInterval(timerInterval);
         timeRemaining = (isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput)) * 60;
@@ -89,7 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // cambia entre modo trabajo y descanso
     function skipMode() {
         isWorking = !isWorking;
         timeRemaining = (isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput)) * 60;
@@ -97,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         actualizarFondo();
     }
 
-    // ejecuta cada segundo, actualiza el reloj y cambia de modo al terminar
     function tick() {
         if (timeRemaining > 0) {
             timeRemaining--;
@@ -109,9 +140,11 @@ document.addEventListener('DOMContentLoaded', () => {
             isRunning = false;
             animarIcono(svgPlay);
             updateClock();
+
             setTimeout(() => {
                 isWorking = !isWorking;
-                timeRemaining = (isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput)) * 60;
+                const minutos = isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput);
+                timeRemaining = minutos * 60;
                 updateClock();
                 isRunning = true;
                 actualizarFondo();
@@ -121,7 +154,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // actualiza la clase del body según el modo actual
     function actualizarFondo() {
         document.body.classList.remove('working', 'breaking');
         if (isRunning) {
@@ -129,25 +161,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // muestra el tiempo restante en el reloj
     function updateClock() {
         clockElement.textContent = formatTime(timeRemaining);
     }
 
-    // convierte segundos a formato mm:ss
     function formatTime(seconds) {
         const m = Math.floor(seconds / 60).toString().padStart(2, '0');
         const s = (seconds % 60).toString().padStart(2, '0');
         return `${m}:${s}`;
     }
 
-    // obtiene el valor del input como minutos, validando que sea mayor que cero
     function getInputMinutes(input) {
         const val = parseInt(input.value, 10);
-        return isNaN(val) || val <= 0 ? 0 : val;
+        return isNaN(val) || val < 1 ? 1 : val;
     }
 
-    // anima el cambio de ícono del botón de inicio
     function animarIcono(svg) {
         iconSpan.style.opacity = 0;
         setTimeout(() => {
@@ -156,14 +184,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200);
     }
 
-    // reproduce el sonido de alarma
     function reproducirAlarma() {
         sonido.pause();
         sonido.currentTime = 0;
         sonido.play().catch(err => console.warn("Error al reproducir alarma:", err));
     }
 
-    // aplica animación de sacudida al reloj
     function animarReloj() {
         reproducirAlarma();
         clockElement.classList.remove('animate__animated', 'animate__shakeX');
@@ -176,33 +202,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // limita el input a 2 caracteres
     function limitarLargoInput(input) {
         if (input.value.length > 2) {
             input.value = input.value.slice(0, 2);
         }
     }
 
-    // impide ingresar un número mayor al valor máximo
     function limitarValor(input, max) {
         const val = parseInt(input.value, 10);
         if (!isNaN(val) && val > max) input.value = max;
     }
 
-    // bloquea caracteres no numéricos en los inputs
     function bloquearCaracteresInvalidos(e) {
         const k = e.key;
         const valid = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
         if (!/^\d$/.test(k) && !valid.includes(k)) e.preventDefault();
     }
 
-    // evita pegar texto no numérico en los inputs
     function validarPegado(e) {
         const txt = (e.clipboardData || window.clipboardData).getData('text');
         if (!/^\d+$/.test(txt)) e.preventDefault();
     }
 
-    // actualiza fecha y hora en pantalla
     function updateDateTime() {
         const hoy = new Date();
         const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
@@ -221,5 +242,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         actualizarHora();
         setInterval(actualizarHora, 1000);
+    }
+    
+    function animarBoton(boton) {
+        boton.classList.remove('shrink');
+        void boton.offsetWidth; // Forzar reflujo para reiniciar animación
+        boton.classList.add('shrink');
     }
 });
