@@ -1,63 +1,125 @@
-body {
-    font-family: "Raleway", sans-serif;
-    background: #f7f7f7;
+* {
+    box-sizing: border-box;
     margin: 0;
-    padding: 50px;
+    padding: 0;
+}
+body {
+    font-family: 'Raleway', sans-serif;
+    background: linear-gradient(135deg, #ca5c3b 40%, #166b8f 20%);
+    color: #003366;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    color: #333;
+    align-items: center;
+    padding: 2rem;
 }
-
-.pomodoro-container {
-    display: flex;
+.pomodoro-card {
+    background-color: #f9fbfc;
+    border-radius: 1.5rem;
+    width: 100%;
+    padding: 3rem 2rem;
+    display: inline-flex;
     flex-direction: column;
-    max-width: 600px;
+    justify-content: space-between;
+    gap: 1rem;
+    max-width: unset;
+    min-width: fit-content;
+    box-shadow: 4px 10px 12px rgba(0, 0, 0, 0.2);
+}
+.container-superior {
+    text-align: center;
+    background-color: #0f3d5a;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    border-radius: 2rem 2rem 0 0;
+}
+.title {
+    font-size: 1.4rem;
+    color: white;
+    padding: 0.5rem 0 0 0;
+    letter-spacing: 6px;
+    font-weight: 700;
+}
+.container-clock {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.clock {
+    font-family: "ZCOOL QingKe HuangYou", sans-serif;
+    font-size: clamp(5rem, 20vw, 12rem);
+    font-weight: 700;
+    color: white;
+    border-bottom: 2px solid white;
+}
+.container-date, .container-day {
+    padding-left: 1rem;
+}
+.container-day{
+    padding-bottom: 1rem;
+}
+.date, .day {
+    font-family: "ZCOOL QingKe HuangYou", sans-serif;
+    font-size: 0.8rem;
+    text-align: center;
+    margin-top: 1rem;
+    padding: 0;
+    color: white;
+    letter-spacing: 5px;
+}
+.day {
+    font-family: "Raleway", sans-serif;
+}
+.container-inferior {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+}
+.container-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ca5c3b;
+    padding: 0.5rem 1rem;
+    border-radius: 0 0 1rem 1rem;
+    flex: 1;
+}
+.container-input label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+}
+.container-input input {
+    font-family: "ZCOOL QingKe HuangYou", sans-serif;
+    width: 80px;
+    padding: 0.4rem;
+    font-size: 1.2rem;
+    border: 1px solid white;
+    border-radius: 0.5rem;
+    background-color: white;
+    color: black;
+    text-align: center;
+}
+.container-button {
     width: 100%;
     text-align: center;
-    padding: 3rem;
+    margin-top: 1rem;
 }
-
-.title {
-    font-size: 2.5rem;
-    padding: 0;
-    margin-bottom: 3rem;
-}
-
-.pomodoro-card {
-    font-size: 1.2rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: white;
-    padding: 20px;
-    margin: 10px 0;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.pomodoro-card h2 {
-    margin-bottom: 1rem;
-    color: #444;
-}
-
-.info p {
-    margin: 5px 0;
-    font-size: 1rem;
-}
-
-.start-btn {
-    font-size: 1rem;
-    margin-top: 15px;
-    padding: 10px 20px;
-    background: #ff6b6b;
-    color: white;
-    border: none;
-    border-radius: 8px;
+.button-start {
+    background-color: #0f3d5a;
+    color: #eef6fc;
+    font-weight: 400;
+    font-size: 2rem; 
+    padding: 1rem 1.2rem; 
+    border: 1px solid #166b8f;
+    border-radius: 0.5rem; 
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background-color 0.3s ease;
 }
-
-.start-btn:hover {
-    background: #ff4e4e;
+.button-start:hover {
+    background-color: #144c70;
 }

@@ -8,30 +8,58 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 	<!-- font: raleway -->
 	<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+	<!-- font: zcool qingke huangyou -->
+	<link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
     <!-- css -->
     <link rel="stylesheet" href="./style.css">
     <!-- icon -->
     <link rel="icon" href="">
-    <title>Pomodoro</title>
+    <title>Pomodoro2</title>
 </head>
     <body>
-        <main class="pomodoro-container">
-            <h1 class="title">Reloj Pomodoro</h1>
-            <section class="pomodoro-card largo">
-                <h2>Largo</h2>
-                <div class="info">
-                    <p>Tiempo de estudio: <b>50 minutos</b></p>
-                    <p>Tiempo de descanso: <b>10 minutos</b></p>
-                </div>
-                <button class="start-btn">Iniciar</button>
-            </section>
-            <section class="pomodoro-card corto">
-                <h2>Corto</h2>
-                <div class="info">
-                    <p>Tiempo de estudio: <b>25 minutos</b></p>
-                    <p>Tiempo de descanso: <b>5 minutos</b></p>
-                </div>
-                <button class="start-btn">Iniciar</button>
+        <main>
+            <section class="pomodoro-card">
+
+
+                <section class="container-superior">
+                    <div class="container-title">
+                        <h1 class="title">RELOJ POMODORO</h1>
+                    </div>
+                    <div class="container-clock">
+                        <h2 class="clock">00:00</h2>
+                    </div>
+                    <div class="container-date">
+                        <p class="date">25/07/2025</p>
+                    </div>
+                    <div class="container-day">
+                        <p class="day">DOMINGO</p>
+                    </div>
+                </section>
+
+
+                <section class="container-inferior">
+                    <div class="container-input">
+                        <label for="duration">DURACIÓN</label>
+                        <input id="duration" type="number" name="duration" list="options-duration" min="1" max="120" value="50">
+                        <datalist id="options-duration">
+                            <option value="50">
+                            <option value="25">
+                        </datalist>
+                    </div>
+                    <div class="container-input">
+                        <label for="break">DESCANSO</label>
+                        <input id="break" type="number" name="break" list="options-break" min="1" max="60" value="25">
+                        <datalist id="options-break">
+                            <option value="25">
+                            <option value="50">
+                        </datalist>
+                    </div>
+                    <div class="container-button">
+                        <button class="button-start">&#x25B6</button>
+                    </div>
+                </section>
+
+
             </section>
         </main>
         <script src="./main.js"></script>
