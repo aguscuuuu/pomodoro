@@ -10,6 +10,10 @@
 	<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 	<!-- font: zcool qingke huangyou -->
 	<link href="https://fonts.googleapis.com/css2?family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
+    <!-- aos -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <!-- animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <!-- css -->
     <link rel="stylesheet" href="./styles/style.css">
     <!-- icon -->
@@ -18,50 +22,66 @@
 </head>
     <body>
         <main>
-            <section class="pomodoro-card">
-
-
+            <section class="pomodoro-card animate__animated animate__fadeInDown">
                 <section class="container-superior">
                     <div class="container-title">
                         <h1 class="title">RELOJ POMODORO</h1>
                     </div>
                     <div class="container-clock">
                         <h2 class="clock">00:00</h2>
+                        <span class="white-line"></span>
                     </div>
                     <div class="container-date">
-                        <p class="date">25/07/2025</p>
+                        <p class="date"></p>
                     </div>
                     <div class="container-day">
-                        <p class="day">DOMINGO</p>
+                        <p class="day"></p>
+                        <p class="hour"></p>
                     </div>
                 </section>
-
-
                 <section class="container-inferior">
                     <div class="container-input">
                         <label for="duration">DURACIÓN</label>
-                        <input id="duration" type="number" name="duration" list="options-duration" min="1" max="120" value="50">
+                        <input id="duration" type="number" name="duration" list="options-duration" min="1" max="50" value="25">
                         <datalist id="options-duration">
-                            <option value="50">
                             <option value="25">
+                            <option value="50">
                         </datalist>
                     </div>
                     <div class="container-input">
                         <label for="break">DESCANSO</label>
-                        <input id="break" type="number" name="break" list="options-break" min="1" max="60" value="25">
+                        <input id="break" type="number" name="break" list="options-break" min="1" max="25" value="5">
                         <datalist id="options-break">
+                            <option value="5">
                             <option value="25">
-                            <option value="50">
                         </datalist>
                     </div>
                     <div class="container-button">
-                        <button class="button-start">&#x25B6</button>
+                        <button class="button-restart" aria-label="Reiniciar">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M4.05 11a9 9 0 1 1 1.12 4.83"/>
+                                <polyline points="4 4 4 10 10 10"/>
+                            </svg>
+                        </button>
+                        <button class="button-start">
+                            <span class="icon"></span>
+                        </button>
+                        <button class="button-forward" aria-label="Adelantar">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polygon points="13 19 22 12 13 5 13 19"></polygon>
+                                <polygon points="2 19 11 12 2 5 2 19"></polygon>
+                            </svg>
+                        </button>
                     </div>
                 </section>
-
-
             </section>
         </main>
+        <audio id="alarm-sound" src="./multimedia/alarmQuiet.mp3" preload="auto"></audio>
+        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+        <script>
+            AOS.init();
+        </script>
         <script src="./scripts/main.js"></script>
     </body>
 </html>
