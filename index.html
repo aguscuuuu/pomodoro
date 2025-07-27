@@ -22,7 +22,7 @@
 </head>
     <body>
         <main>
-            <section class="pomodoro-card animate__animated animate__fadeInDown">
+            <section class="pomodoro-card">
                 <section class="container-superior">
                     <div class="container-title">
                         <h1 class="title">RELOJ POMODORO</h1>
@@ -37,11 +37,15 @@
                     <div class="container-day">
                         <p class="day"></p>
                         <p class="hour"></p>
+                        <p class="mode-label">Tiempo de estudiar...</p>
                     </div>
                 </section>
+                <div class="progress-bar-container">
+                    <div class="progress-bar"></div>
+                </div>
                 <section class="container-inferior">
                     <div class="container-input">
-                        <label for="duration">DURACIÓN</label>
+                        <label for="duration">Duración</label>
                         <input id="duration" type="number" name="duration" list="options-duration" min="1" max="50" value="25">
                         <datalist id="options-duration">
                             <option value="25">
@@ -49,7 +53,7 @@
                         </datalist>
                     </div>
                     <div class="container-input">
-                        <label for="break">DESCANSO</label>
+                        <label for="break">Descanso</label>
                         <input id="break" type="number" name="break" list="options-break" min="1" max="25" value="5">
                         <datalist id="options-break">
                             <option value="5">
