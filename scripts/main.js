@@ -117,16 +117,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 timeRemaining = minutos * 60;
             }
             isRunning = true;
+            startButton.classList.add('active'); // ← aquí
             actualizarFondo();
             animarIcono(svgPause);
             timerInterval = setInterval(tick, 1000);
         } else {
             clearInterval(timerInterval);
             isRunning = false;
+            startButton.classList.remove('active'); // ← y aquí
             actualizarFondo();
             animarIcono(svgPlay);
         }
     }
+
 
     // reinicia el temporizador al tiempo inicial según el modo actual
     function restartTimer() {
@@ -183,9 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // agrega la animación inicial al cargar la tarjeta del pomodoro
-    pomodoroCardElement.classList.add('animate__animated', 'animate__fadeInDown');
+    pomodoroCardElement.classList.add('animate__animated', 'animate__fadeInDownBig');
     setTimeout(() => {
-        pomodoroCardElement.classList.remove('animate__fadeInDown');
+        pomodoroCardElement.classList.remove('animate__fadeInDownBig');
     }, 1000);
 
     // actualiza el reloj mostrando el tiempo restante en formato mm:ss y el título de la página

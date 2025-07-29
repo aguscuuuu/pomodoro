@@ -5,7 +5,7 @@
 }
 body {
     font-family: 'Raleway', sans-serif;
-    background: linear-gradient(135deg, #ca5c3b 40%, #166b8f 20%);
+    background: linear-gradient(135deg, #ca5c3b 40%, #0f3d5a 20%);
     color: #003366;
     min-height: 100vh;
     display: flex;
@@ -246,21 +246,7 @@ input[type="number"]:focus {
     stroke: #eef6fc;
     display: block;
 }
-.button-restart.shrink,
-.button-forward.shrink {
-    animation: shrinkAnim 250ms ease-in-out;
-}
-@keyframes shrinkAnim {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(0.9);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
+
 .progress-bar-container {
     width: 100%;
     height: 20px;
