@@ -188,9 +188,17 @@ document.addEventListener('DOMContentLoaded', () => {
         pomodoroCardElement.classList.remove('animate__fadeInDown');
     }, 1000);
 
-    // actualiza el reloj mostrando el tiempo restante en formato mm:ss
+    // actualiza el reloj mostrando el tiempo restante en formato mm:ss y el título de la página
     function updateClock() {
-        clockElement.textContent = formatTime(timeRemaining);
+        const tiempo = formatTime(timeRemaining);
+        clockElement.textContent = tiempo;
+
+        if (isRunning) {
+            const estado = isWorking ? 'Estudiando...' : 'Descansando...';
+            document.title = `${tiempo} | ${estado}`;
+        } else {
+            document.title = 'Reloj Pomodoro';
+        }
     }
 
     // actualiza la barra de progreso según el porcentaje completado del temporizador
