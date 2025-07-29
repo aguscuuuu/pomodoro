@@ -13,10 +13,6 @@ body {
     align-items: center;
     padding: 2rem;
 }
-body::selection {
-    background-color: white;
-    color: #0f3d5a;
-}
 body::before {
     content: "";
     position: fixed;
@@ -32,8 +28,12 @@ body::before {
 body.working::before {
     background: rgba(0, 0, 0, 0.7); 
 }
+body::selection {
+    background-color: white;
+    color: #0f3d5a;
+}
 .pomodoro-card {
-    background-color: #f9fbfc;
+    background-color: #fff;
     border-radius: 1.5rem;
     width: 100%;
     padding: 3rem 2rem;
@@ -51,7 +51,7 @@ body.working::before {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #0f3d5a;
+    background: linear-gradient(to bottom, #175074, #09273a);
     padding: 1rem 0; 
     border-radius: 2rem 2rem 0 0;
     text-align: center; 
@@ -246,7 +246,6 @@ input[type="number"]:focus {
     stroke: #eef6fc;
     display: block;
 }
-
 .progress-bar-container {
     width: 100%;
     height: 20px;
