@@ -84,39 +84,46 @@ body.working::before {
     height: 2px;
     background-color: white;
 }
-.container-date, .container-day {
-    padding-left: 0;
-    padding-right: 0;
-}
-.container-day {
+.container-datetime {
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end; 
-    height: 100%; 
-}
-.date, .day {
-    font-family: "ZCOOL QingKe HuangYou", sans-serif;
-    font-size: 1rem;
-    text-align: center;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
     margin-top: 1rem;
-    padding: 0;
+    padding: 0 1rem;
+    font: 600 1.1rem 'Raleway', sans-serif;
     color: white;
+    gap: 1rem;
 }
-.date{
+.container-datetime p {
+    flex: 1;
+    margin: 0;
+    letter-spacing: 2px;
+    text-align: center;
+}
+.container-datetime .date   { text-align: left; }
+.container-datetime .hour   { text-align: right; }
+.date, .day, .hour {
+    color: white;
+    font-size: 1rem;
+    padding: 0;
+    text-align: center;
+}
+.date {
+    font-family: 'ZCOOL QingKe HuangYou', sans-serif;
     letter-spacing: 5px;
     font-weight: 700;
+    margin-top: 1rem;
 }
 .day {
-    font-family: "Raleway", sans-serif;
+    font-family: 'Raleway', sans-serif;
     font-weight: 600;
+    margin-top: 1rem;
 }
 .hour {
-    font-family: "ZCOOL QingKe HuangYou", sans-serif;
-    font-size: 1rem;
-    color: white;
-    text-align: center;
-    margin-top: 0.2rem;
-    letter-spacing: 3px;
+    font-family: 'ZCOOL QingKe HuangYou', sans-serif;
+    letter-spacing: 0;
     font-weight: 800;
 }
 .container-inferior {

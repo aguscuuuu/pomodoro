@@ -293,12 +293,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // actualiza la fecha, día y hora en la interfaz, refrescando la hora cada segundo
     function updateDateTime() {
         const hoy = new Date();
-        const dias = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+        const dias = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
         dateElement.textContent = hoy.toLocaleDateString('es-AR');
 
         // solo la primera letra del día en mayúscula
         const dia = dias[hoy.getDay()];
-        dayElement.textContent = dia.charAt(0).toUpperCase() + dia.slice(1).toLowerCase();
+        dayElement.textContent = dias[hoy.getDay()];
 
         function actualizarHora() {
             const ahora = new Date();
