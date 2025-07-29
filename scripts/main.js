@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => { 
     
     // elementos del dom
     const dateElement = document.querySelector('.date');
@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerInterval = null;
     let isWorking = true;
     let isRunning = false;
+
+    // restaurar datos del localstorage si existen
+    const savedDuration = localStorage.getItem('pomodoro-duration');
+    const savedBreak = localStorage.getItem('pomodoro-break');
+
+    if (savedDuration !== null) durationInput.value = savedDuration;
+    if (savedBreak !== null) breakInput.value = savedBreak;
+
     let timeRemaining = getInputMinutes(durationInput) * 60;
 
     sonido.load();
@@ -46,6 +54,8 @@ document.addEventListener('DOMContentLoaded', () => {
     durationInput.addEventListener('input', () => {
         limitarLargoInput(durationInput);
         limitarValor(durationInput, 50);
+        localStorage.setItem('pomodoro-duration', durationInput.value);
+
         if (!isRunning && isWorking && durationInput.value !== '') {
             timeRemaining = getInputMinutes(durationInput) * 60;
             updateClock();
@@ -59,6 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isNaN(val) || val < 1) {
             durationInput.value = '1';
         }
+        localStorage.setItem('pomodoro-duration', durationInput.value);
+
         if (!isRunning && isWorking) {
             timeRemaining = getInputMinutes(durationInput) * 60;
             updateClock();
@@ -70,6 +82,8 @@ document.addEventListener('DOMContentLoaded', () => {
     breakInput.addEventListener('input', () => {
         limitarLargoInput(breakInput);
         limitarValor(breakInput, 25);
+        localStorage.setItem('pomodoro-break', breakInput.value);
+
         if (!isRunning && !isWorking && breakInput.value !== '') {
             timeRemaining = getInputMinutes(breakInput) * 60;
             updateClock();
