@@ -30,9 +30,14 @@ body::selection {
   background-color: white;
   color: #0f3d5a;
 }
-
 body.working::before {
   background: rgba(0, 0, 0, 0.7);
+}
+body.breaking .progress-bar-container {
+  background-color: #ca5c3b;
+}
+body.breaking .progress-bar-container .progress-bar {
+  background-color: #0f3d5a;
 }
 
 .pomodoro-card {
@@ -43,14 +48,12 @@ body.working::before {
   display: inline-flex;
   flex-direction: column;
   justify-content: space-between;
-  max-width: unset;
   min-width: fit-content;
   box-shadow: 4px 10px 12px rgba(0, 0, 0, 0.2);
   position: relative;
   z-index: 1;
 }
-
-.container-superior {
+.pomodoro-card .container-superior {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -60,16 +63,14 @@ body.working::before {
   border-radius: 2rem 2rem 0 0;
   text-align: center;
 }
-
-.title {
+.pomodoro-card .container-superior .container-title .title {
   font-size: 0.8rem;
   color: white;
   padding: 0.5rem 0 0 0;
   letter-spacing: 6px;
   font-weight: 700;
 }
-
-.container-clock {
+.pomodoro-card .container-superior .container-clock {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -77,26 +78,23 @@ body.working::before {
   overflow: hidden;
   gap: 0.5rem;
 }
-
-.clock {
+.pomodoro-card .container-superior .container-clock .clock {
   font-family: "ZCOOL QingKe HuangYou", sans-serif;
   font-size: clamp(5rem, 20vw, 12rem);
   font-weight: 700;
   color: white;
   letter-spacing: 5px;
 }
-
-.white-line {
+.pomodoro-card .container-superior .container-clock .white-line {
   display: block;
   width: 500px;
   height: 2px;
   background-color: white;
 }
-
-.container-datetime {
+.pomodoro-card .container-superior .container-datetime {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: baseline;
   width: 100%;
   max-width: 500px;
   margin-top: 1rem;
@@ -105,61 +103,73 @@ body.working::before {
   color: white;
   gap: 1rem;
 }
-.container-datetime p {
+.pomodoro-card .container-superior .container-datetime p {
   flex: 1;
   margin: 0;
-  letter-spacing: 2px;
   text-align: center;
+  align-items: center;
+  height: 100%;
 }
-.container-datetime .date {
+.pomodoro-card .container-superior .container-datetime .date {
   text-align: left;
-}
-.container-datetime .hour {
-  text-align: right;
-}
-
-.date {
   color: white;
   font-size: 1rem;
-  padding: 0;
-  text-align: center;
   font-family: "ZCOOL QingKe HuangYou", sans-serif;
   letter-spacing: 5px;
   font-weight: 700;
-  margin-top: 1rem;
+  align-content: center;
 }
-
-.day {
+.pomodoro-card .container-superior .container-datetime .day {
+  text-align: center;
   color: white;
   font-size: 1rem;
-  padding: 0;
-  text-align: center;
+  letter-spacing: 5px;
   font-family: "Raleway", sans-serif;
   font-weight: 600;
+  align-content: center;
+}
+.pomodoro-card .container-superior .container-datetime .hour {
+  text-align: right;
+  color: white;
+  font-size: 1.1rem;
+  letter-spacing: 5px;
+  font-family: "ZCOOL QingKe HuangYou", sans-serif;
+  font-weight: 800;
+  align-content: center;
+}
+.pomodoro-card .container-superior .mode-label {
+  text-align: center;
+  font-size: 1rem;
+  padding-top: 2rem;
+  font-family: "Raleway", sans-serif;
+  user-select: none;
+  font-weight: 600;
+  color: white;
+}
+.pomodoro-card .progress-bar-container {
+  width: 100%;
+  height: 20px;
+  background-color: #0f3d5a;
+  overflow: hidden;
+  transition: background-color 0.3s ease;
   margin-top: 1rem;
 }
-
-.hour {
-  color: white;
-  font-size: 1rem;
-  padding: 0;
-  text-align: center;
-  font-family: "ZCOOL QingKe HuangYou", sans-serif;
-  letter-spacing: 0;
-  font-weight: 800;
+.pomodoro-card .progress-bar-container .progress-bar {
+  height: 100%;
+  width: 0%;
+  background-color: #ca5c3b;
+  transition: width 1s linear;
 }
-
-.container-inferior {
+.pomodoro-card .container-inferior {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
   flex-wrap: wrap;
+  gap: 1rem;
   justify-content: center;
   align-items: flex-start;
   margin-top: 0.5rem;
 }
-
-.container-input {
+.pomodoro-card .container-inferior .container-input {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -168,12 +178,12 @@ body.working::before {
   border-radius: 0 0 1rem 1rem;
   flex: 1;
 }
-.container-input label {
+.pomodoro-card .container-inferior .container-input label {
   font-size: 1rem;
   font-weight: 600;
   color: white;
 }
-.container-input input {
+.pomodoro-card .container-inferior .container-input input {
   font-family: "ZCOOL QingKe HuangYou", sans-serif;
   width: 80px;
   padding: 0.4rem;
@@ -184,49 +194,31 @@ body.working::before {
   color: black;
   text-align: center;
 }
-
-input[type=number] {
-  -moz-appearance: textfield;
-  -webkit-appearance: none;
-  appearance: none;
-}
-input[type=number]::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-input[type=number]:focus {
+.pomodoro-card .container-inferior .container-input input:focus {
   outline: none;
 }
-
-.container-volume {
+.pomodoro-card .container-inferior .container-volume {
   margin-top: 2rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
 }
-
-#volume {
+.pomodoro-card .container-inferior .container-volume #volume {
   width: 80%;
   height: 8px;
   border-radius: 5px;
   background: linear-gradient(to right, #e77c5b 80%, #f5c6b1 80%);
   appearance: none;
-  -webkit-appearance: none;
   cursor: pointer;
   position: relative;
 }
-#volume::-webkit-slider-runnable-track {
+.pomodoro-card .container-inferior .container-volume #volume::-webkit-slider-runnable-track {
   height: 8px;
   background: transparent;
   border-radius: 5px;
 }
-#volume::-webkit-slider-thumb {
-  -webkit-appearance: none;
+.pomodoro-card .container-inferior .container-volume #volume::-webkit-slider-thumb {
   appearance: none;
   width: 20px;
   height: 20px;
@@ -236,12 +228,12 @@ input[type=number]:focus {
   margin-top: -6px;
   transition: background 0.3s ease;
 }
-#volume::-moz-range-track {
+.pomodoro-card .container-inferior .container-volume #volume::-moz-range-track {
   height: 8px;
   background: transparent;
   border-radius: 5px;
 }
-#volume::-moz-range-thumb {
+.pomodoro-card .container-inferior .container-volume #volume::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
@@ -249,137 +241,82 @@ input[type=number]:focus {
   border: 2px solid white;
   cursor: pointer;
 }
-
-.container-button {
+.pomodoro-card .container-inferior .container-button {
   width: 100%;
-  text-align: center;
   margin-top: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 1.5rem;
-  margin-top: 1rem;
-  width: 100%;
 }
-
-.icon {
-  display: inline-block;
-  transition: opacity 0.3s ease;
-  will-change: opacity;
-}
-
-.button-restart {
-  background-color: #ca5c3b;
-  border: none;
-  padding: 0.6rem;
-  border-radius: 12px;
+.pomodoro-card .container-inferior .container-button button {
   cursor: pointer;
-  transition: background 0.3s ease;
+  border: none;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.pomodoro-card .container-inferior .container-button button.button-restart, .pomodoro-card .container-inferior .container-button button.button-forward {
+  background-color: #ca5c3b;
+  padding: 0.6rem;
+  border-radius: 12px;
   width: 48px;
   height: 48px;
+  transition: background 0.3s ease;
 }
-.button-restart svg {
+.pomodoro-card .container-inferior .container-button button.button-restart svg, .pomodoro-card .container-inferior .container-button button.button-forward svg {
   stroke: #eef6fc;
   width: 26px;
   height: 26px;
   transition: stroke 0.3s ease;
-  display: block;
 }
-.button-restart:hover {
+.pomodoro-card .container-inferior .container-button button.button-restart:hover, .pomodoro-card .container-inferior .container-button button.button-forward:hover {
   background-color: #e77c5b;
 }
-.button-restart:hover svg {
+.pomodoro-card .container-inferior .container-button button.button-restart:hover svg, .pomodoro-card .container-inferior .container-button button.button-forward:hover svg {
   stroke: #ffffff;
 }
-
-.button-forward {
-  background-color: #ca5c3b;
-  border: none;
-  padding: 0.6rem;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-}
-.button-forward svg {
-  stroke: #eef6fc;
-  width: 26px;
-  height: 26px;
-  transition: stroke 0.3s ease;
-  display: block;
-}
-.button-forward:hover {
-  background-color: #e77c5b;
-}
-.button-forward:hover svg {
-  stroke: #ffffff;
-}
-
-.button-start {
+.pomodoro-card .container-inferior .container-button button.button-start {
   background-color: #0f3d5a;
-  height: 70px;
-  width: 75px;
+  height: 80px;
+  width: 80px;
   color: #eef6fc;
   font-weight: 400;
   font-size: 2rem;
-  padding: 1rem;
+  padding: 0;
   border: 1px solid #166b8f;
   border-radius: 15px;
-  cursor: pointer;
   transition: background-color 0.3s ease;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
-.button-start:hover {
+.pomodoro-card .container-inferior .container-button button.button-start:hover {
   background-color: #166b8f;
 }
-.button-start .icon svg {
-  width: 40px;
-  height: 40px;
-  stroke: #eef6fc;
-  display: block;
-}
-
-.progress-bar-container {
+.pomodoro-card .container-inferior .container-button button.button-start .icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 100%;
-  height: 20px;
-  background-color: #0f3d5a;
-  overflow: hidden;
-  transition: background-color 0.3s ease;
-  margin-top: 1rem;
-}
-
-.progress-bar {
   height: 100%;
-  width: 0%;
-  background-color: #ca5c3b;
-  transition: width 1s linear;
+  transition: opacity 0.2s ease;
+}
+.pomodoro-card .container-inferior .container-button button.button-start .icon svg {
+  width: 60px;
+  height: 60px;
+  fill: white;
+  transition: transform 0.2s ease;
 }
 
-body.breaking .progress-bar-container {
-  background-color: #ca5c3b;
+input[type=number] {
+  -moz-appearance: textfield;
+  -webkit-appearance: none;
+  appearance: none;
 }
-body.breaking .progress-bar {
-  background-color: #0f3d5a;
-}
-
-.mode-label {
-  text-align: center;
-  font-size: 1rem;
-  padding-top: 2rem;
-  font-family: "Raleway", sans-serif;
-  user-select: none;
-  letter-spacing: 0px;
-  font-weight: 600;
-  color: white;
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+  appearance: none;
+  margin: 0;
 }
 
 /*# sourceMappingURL=style.css.map */
