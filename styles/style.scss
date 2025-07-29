@@ -203,6 +203,56 @@ input[type="number"] {
 		outline: none;
 	}
 }
+.container-volume {
+    margin-top: 2rem;
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+#volume {
+    width: 80%;
+    height: 8px;
+    border-radius: 5px;
+    background: linear-gradient(to right, #e77c5b 80%, #f5c6b1 80%);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    position: relative;
+
+    &::-webkit-slider-runnable-track {
+        height: 8px;
+        background: transparent;
+        border-radius: 5px;
+    }
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ca5c3b;
+        border: 2px solid white;
+        margin-top: -6px;
+        transition: background 0.3s ease;
+    }
+
+    &::-moz-range-track {
+        height: 8px;
+        background: transparent;
+        border-radius: 5px;
+    }
+
+    &::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ca5c3b;
+        border: 2px solid white;
+        cursor: pointer;
+    }
+}
 .container-button {
 	width: 100%;
 	text-align: center;

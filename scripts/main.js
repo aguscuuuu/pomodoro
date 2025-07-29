@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const sonido = document.getElementById('alarm-sound');
     const progressBar = document.querySelector('.progress-bar');
     const modeLabel = document.querySelector('.mode-label');
+    const volumeSlider = document.getElementById('volume');
+    const savedVolume = localStorage.getItem('pomodoro-volume');
 
     // iconos svg
     const svgPlay = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="36" height="36"><polygon points="6,4 20,12 6,20" /></svg>`;
@@ -277,8 +279,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function reproducirAlarma() {
         sonido.pause();
         sonido.currentTime = 0;
-        sonido.play().catch(err => console.warn("Error al reproducir alarma:", err));
+
+        // Reproduce dos veces el audio de forma secuencial
+        sonido.play()
+            .then(() => {
+                return new Promise(resolve => {
+                    sonido.onended = () => {
+                        sonido.onended = null; // limpia el listener para evitar bucles
+                        resolve();
+                    };
+                });
+            })
+            .then(() => {
+                sonido.currentTime = 0;
+                return sonido.play();
+            })
+            .catch(err => console.warn("Error al reproducir la alarma:", err));
     }
+
 
     // anima la tarjeta del pomodoro con un efecto de sacudida y reproduce la alarma
     function animarCard() {
@@ -347,4 +365,49 @@ document.addEventListener('DOMContentLoaded', () => {
     function actualizarModoLabel() {
         modeLabel.textContent = isWorking ? 'Tiempo de estudiar...' : 'Tiempo de descansar...';
     }
+
+    
+
+    // función para ajustar el volumen exponencialmente
+    function ajustarVolumen(linearValue) {
+        return Math.pow(linearValue, 2);
+    }
+
+    // valor inicial
+    volumeSlider.value = 0.80;
+    sonido.volume = ajustarVolumen(0.80);
+
+    // cargar volumen desde localstorage si existe
+    if (savedVolume !== null) {
+        volumeSlider.value = savedVolume;
+        sonido.volume = ajustarVolumen(parseFloat(savedVolume));
+    }
+
+    // actualizar volumen mientras se mueve
+    volumeSlider.addEventListener('input', () => {
+        const linear = parseFloat(volumeSlider.value);
+        sonido.volume = ajustarVolumen(linear);
+        localStorage.setItem('pomodoro-volume', linear);
+    });
+
+    // probar sonido al soltar la barra
+    volumeSlider.addEventListener('change', () => {
+        sonido.pause();
+        sonido.currentTime = 0;
+        sonido.play().catch(err => console.warn("Error al reproducir sonido de prueba:", err));
+    });
+
+    function actualizarColorBarraVolumen(valor) {
+        const porcentaje = valor * 100;
+        volumeSlider.style.background = `linear-gradient(to right, #e77c5b ${porcentaje}%, #f5c6b1 ${porcentaje}%)`;
+    }
+    actualizarColorBarraVolumen(volumeSlider.value);
+
+    volumeSlider.addEventListener('input', () => {
+        const linear = parseFloat(volumeSlider.value);
+        sonido.volume = ajustarVolumen(linear);
+        localStorage.setItem('pomodoro-volume', linear);
+        actualizarColorBarraVolumen(linear);
+    });
+
 });
