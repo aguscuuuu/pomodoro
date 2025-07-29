@@ -34,7 +34,7 @@ body::selection {
 }
 .pomodoro-card {
     background-color: #fff;
-    border-radius: 1.5rem;
+    border-radius: 2rem;
     width: 100%;
     padding: 3rem 2rem;
     display: inline-flex;
