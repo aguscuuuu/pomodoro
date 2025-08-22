@@ -50,7 +50,7 @@ body {
 // pomodoro card
 .pomodoro-card {
 	background-color: $background-color_2;
-	border-radius: 2rem;
+	border-radius: 3rem;
 	width: 100%;
 	padding: 3rem 2rem;
 	display: inline-flex;
@@ -94,7 +94,7 @@ body {
 			}
 			.white-line {
 				display: block;
-				width: 500px;
+				width: 800px;
 				height: 2px;
 				background-color: $background-color_1;
 			}
@@ -157,7 +157,7 @@ body {
 		.pomodoro-counter {
 			text-align: center;
 			font-size: 1rem;
-			padding-top: 2rem;
+			padding-top: 0.3rem;
 			font-family: $font-family_1;
 			user-select: none;
 			font-weight: 600;
@@ -212,6 +212,10 @@ body {
 				user-select: text;
 				&:focus {
 					outline: none;
+				}
+				&::selection{
+					background-color: $background-color_3;
+					color: white;
 				}
 			}
 		}

@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  user-select: none;
 }
 
 body {
@@ -42,7 +43,7 @@ body.breaking .progress-bar-container .progress-bar {
 
 .pomodoro-card {
   background-color: #fff;
-  border-radius: 2rem;
+  border-radius: 3rem;
   width: 100%;
   padding: 3rem 2rem;
   display: inline-flex;
@@ -87,7 +88,7 @@ body.breaking .progress-bar-container .progress-bar {
 }
 .pomodoro-card .container-superior .container-clock .white-line {
   display: block;
-  width: 500px;
+  width: 800px;
   height: 2px;
   background-color: white;
 }
@@ -146,6 +147,15 @@ body.breaking .progress-bar-container .progress-bar {
   font-weight: 600;
   color: white;
 }
+.pomodoro-card .container-superior .pomodoro-counter {
+  text-align: center;
+  font-size: 1rem;
+  padding-top: 0.3rem;
+  font-family: "Raleway", sans-serif;
+  user-select: none;
+  font-weight: 600;
+  color: white;
+}
 .pomodoro-card .progress-bar-container {
   width: 100%;
   height: 20px;
@@ -193,9 +203,14 @@ body.breaking .progress-bar-container .progress-bar {
   background-color: white;
   color: black;
   text-align: center;
+  user-select: text;
 }
 .pomodoro-card .container-inferior .container-input input:focus {
   outline: none;
+}
+.pomodoro-card .container-inferior .container-input input::selection {
+  background-color: #ca5c3b;
+  color: white;
 }
 .pomodoro-card .container-inferior .container-volume {
   margin-top: 2rem;
