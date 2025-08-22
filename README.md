@@ -12,7 +12,7 @@ This page features a minimalist and functional Pomodoro Clock web app, designed 
 ## Version & Date
 
 - **Version:** 
-- **Date:** July 2025
+- **Date:** August 2025
 
 ## Language
 
@@ -21,15 +21,14 @@ This page features a minimalist and functional Pomodoro Clock web app, designed 
 
 ## Access
 
-- **Repository:** [https://github.com/aguscuuuu/pomodoro](https://github.com/aguscuuuu/pomodoro)  
-- **Deployment:** 
+- [**Repository**](https://github.com/aguscuuuu/pomodoro)  
+- [**Deployment**](https://aguscuuuu.github.io/pomodoro/)
 
 ## Used Technologies
 
 - **Languages:** HTML, CSS, JavaScript  
-- **Frameworks:**   
+- **Libraries:** AOS, Animate.css  
 - **Databases:** 
-- **Tools:** 
 
 ## Developers & Contributors
 
