@@ -1,23 +1,11 @@
-// colores
-$color_1: #003366;
-$color_2: #0f3d5a;
-$color_3: white;
-$color_4: black;
-$color_5: #eef6fc;
-$background-color_1: white;
-$background-color_2: #fff;
-$background-color_3: #ca5c3b;
-$background-color_4: #e77c5b;
-$background-color_5: #0f3d5a;
-$background-color_6: #166b8f;
-// fuentes
-$font-family_1: 'Raleway', sans-serif;
-$font-family_2: "ZCOOL QingKe HuangYou", sans-serif;
+@import 'variables';
+@import 'breakpoints';
 // reset
 * {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
+	user-select: none;
 }
 // estilos base
 body {
@@ -59,7 +47,7 @@ body {
 		}
 	}
 }
-// pomodoro Card
+// pomodoro card
 .pomodoro-card {
 	background-color: $background-color_2;
 	border-radius: 2rem;
@@ -166,6 +154,15 @@ body {
 			font-weight: 600;
 			color: $color_3;
 		}
+		.pomodoro-counter {
+			text-align: center;
+			font-size: 1rem;
+			padding-top: 2rem;
+			font-family: $font-family_1;
+			user-select: none;
+			font-weight: 600;
+			color: $color_3;
+		}
 	}
 	.progress-bar-container {
 		width: 100%;
@@ -212,6 +209,7 @@ body {
 				background-color: $background-color_1;
 				color: $color_4;
 				text-align: center;
+				user-select: text;
 				&:focus {
 					outline: none;
 				}

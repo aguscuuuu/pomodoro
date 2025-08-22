@@ -1,5 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => { 
-    
+document.addEventListener('DOMContentLoaded', () => {  
+
     // elementos del dom
     const dateElement = document.querySelector('.date');
     const dayElement = document.querySelector('.day');
@@ -17,6 +17,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const modeLabel = document.querySelector('.mode-label');
     const volumeSlider = document.getElementById('volume');
     const savedVolume = localStorage.getItem('pomodoro-volume');
+    const longBreakInput = document.getElementById('long-break');
+    const pomodoroCounterElement = document.querySelector('.pomodoro-counter');
+
 
     // iconos svg
     const svgPlay = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="36" height="36"><polygon points="6,4 20,12 6,20" /></svg>`;
@@ -26,88 +29,171 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerInterval = null;
     let isWorking = true;
     let isRunning = false;
+    let timeRemaining = 0;
 
-    // restaurar datos del localstorage si existen
-    const savedDuration = localStorage.getItem('pomodoro-duration');
-    const savedBreak = localStorage.getItem('pomodoro-break');
+    // cargar configuración inicial desde config.json
+    fetch("data/config.json")
+        .then(res => res.json())
+        .then(config => {
+            // restaurar datos del localstorage si existen
+            const savedDuration = localStorage.getItem('pomodoro-duration');
+            const savedBreak = localStorage.getItem('pomodoro-break');
 
-    if (savedDuration !== null) durationInput.value = savedDuration;
-    if (savedBreak !== null) breakInput.value = savedBreak;
+            durationInput.value = savedDuration !== null ? savedDuration : config.duration;
+            breakInput.value = savedBreak !== null ? savedBreak : config.break;
 
-    let timeRemaining = getInputMinutes(durationInput) * 60;
-
-    sonido.load();
-    iconSpan.innerHTML = svgPlay;
-    updateClock();
-    updateDateTime();
-    updateProgressBar();
-
-    // eventos
-    startButton.addEventListener('click', toggleTimer);
-    restartButton.addEventListener('click', () => {
-        animarBoton(restartButton);
-        restartTimer();
-    });
-    forwardButton.addEventListener('click', () => {
-        animarBoton(forwardButton);
-        skipMode();
-    });
-
-    durationInput.addEventListener('input', () => {
-        limitarLargoInput(durationInput);
-        limitarValor(durationInput, 50);
-        localStorage.setItem('pomodoro-duration', durationInput.value);
-
-        if (!isRunning && isWorking && durationInput.value !== '') {
             timeRemaining = getInputMinutes(durationInput) * 60;
+
+            // inicialización
+            sonido.load();
+            iconSpan.innerHTML = svgPlay;
             updateClock();
+            updateDateTime();
             updateProgressBar();
-            actualizarFondo();
+            inicializarEventos();
         }
-    });
-
-    durationInput.addEventListener('blur', () => {
-        const val = parseInt(durationInput.value, 10);
-        if (isNaN(val) || val < 1) {
-            durationInput.value = '1';
+    )
+        .catch(err => {
+            console.error("Error al cargar config.json:", err);
         }
-        localStorage.setItem('pomodoro-duration', durationInput.value);
+    );
 
-        if (!isRunning && isWorking) {
-            timeRemaining = getInputMinutes(durationInput) * 60;
-            updateClock();
-            updateProgressBar();
-            actualizarFondo();
+    // función que agrupa todos los listeners y lógica principal
+    function inicializarEventos() {
+        // eventos
+        startButton.addEventListener('click', toggleTimer);
+        restartButton.addEventListener('click', () => {
+            animarBoton(restartButton);
+            restartTimer();
         }
-    });
-
-    breakInput.addEventListener('input', () => {
-        limitarLargoInput(breakInput);
-        limitarValor(breakInput, 25);
-        localStorage.setItem('pomodoro-break', breakInput.value);
-
-        if (!isRunning && !isWorking && breakInput.value !== '') {
-            timeRemaining = getInputMinutes(breakInput) * 60;
-            updateClock();
-            updateProgressBar();
-            actualizarFondo();
+    );
+        forwardButton.addEventListener('click', () => {
+            animarBoton(forwardButton);
+            skipMode();
         }
-    });
+    );
 
-    durationInput.addEventListener('keydown', bloquearCaracteresInvalidos);
-    breakInput.addEventListener('keydown', bloquearCaracteresInvalidos);
-    durationInput.addEventListener('paste', validarPegado);
-    breakInput.addEventListener('paste', validarPegado);
+        durationInput.addEventListener('input', () => {
+            limitarLargoInput(durationInput);
+            limitarValor(durationInput, 50);
+            localStorage.setItem('pomodoro-duration', durationInput.value);
 
-    // teclas espacio o enter para iniciar/detener
-    document.addEventListener('keydown', (e) => {
-        const isTyping = document.activeElement === durationInput || document.activeElement === breakInput;
-        if (isTyping) return;
-        if (e.code === 'Space' || e.code === 'Enter') {
-            e.preventDefault();
-            toggleTimer();
+            if (!isRunning && isWorking && durationInput.value !== '') {
+                timeRemaining = getInputMinutes(durationInput) * 60;
+                updateClock();
+                updateProgressBar();
+                actualizarFondo();
+            }
         }
-    });
+    );
+
+        durationInput.addEventListener('blur', () => {
+            const val = parseInt(durationInput.value, 10);
+            if (isNaN(val) || val < 1) {
+                durationInput.value = '1';
+            }
+            localStorage.setItem('pomodoro-duration', durationInput.value);
+
+            if (!isRunning && isWorking) {
+                timeRemaining = getInputMinutes(durationInput) * 60;
+                updateClock();
+                updateProgressBar();
+                actualizarFondo();
+            }
+        });
+
+        longBreakInput.addEventListener('input', () => {
+            limitarLargoInput(longBreakInput);
+            limitarValor(longBreakInput, 30);
+            localStorage.setItem('pomodoro-long-break', longBreakInput.value);
+        });
+        longBreakInput.addEventListener('blur', () => {
+            let val = parseInt(longBreakInput.value, 10);
+            if (isNaN(val) || val < 0) val = 0;       // mínimo 0
+            if (val > 30) val = 30;                    // máximo 30
+            longBreakInput.value = val;
+            localStorage.setItem('pomodoro-long-break', val);
+        });
+
+        
+        breakInput.addEventListener('input', () => {
+            limitarLargoInput(breakInput);
+            limitarValor(breakInput, 25);
+            localStorage.setItem('pomodoro-break', breakInput.value);
+
+            if (!isRunning && !isWorking && breakInput.value !== '') {
+                timeRemaining = getInputMinutes(breakInput) * 60;
+                updateClock();
+                updateProgressBar();
+                actualizarFondo();
+            }
+        });
+        breakInput.addEventListener('blur', () => {
+            const val = parseInt(breakInput.value, 10);
+            if (isNaN(val) || val < 0) breakInput.value = '0';
+            localStorage.setItem('pomodoro-break', breakInput.value);
+
+            if (!isRunning && !isWorking) {
+                timeRemaining = getInputMinutes(breakInput) * 60;
+                updateClock();
+                updateProgressBar();
+                actualizarFondo();
+            }
+        });
+
+        const savedLongBreak = localStorage.getItem('pomodoro-long-break');
+        longBreakInput.value = savedLongBreak !== null ? savedLongBreak : 15;
+
+        durationInput.addEventListener('keydown', bloquearCaracteresInvalidos);
+        breakInput.addEventListener('keydown', bloquearCaracteresInvalidos);
+        durationInput.addEventListener('paste', validarPegado);
+        breakInput.addEventListener('paste', validarPegado);
+        longBreakInput.addEventListener('keydown', bloquearCaracteresInvalidos);
+        longBreakInput.addEventListener('paste', validarPegado);
+
+        // teclas espacio o enter para iniciar/detener
+        document.addEventListener('keydown', (e) => {
+            const isTyping = document.activeElement === durationInput || document.activeElement === breakInput;
+            if (isTyping) return;
+            if (e.code === 'Space' || e.code === 'Enter') {
+                e.preventDefault();
+                toggleTimer();
+            }
+        });
+
+        // agrega la animación inicial al cargar la tarjeta del pomodoro
+        pomodoroCardElement.classList.add('animate__animated', 'animate__fadeInDownBig');
+        setTimeout(() => {
+            pomodoroCardElement.classList.remove('animate__fadeInDownBig');
+        }, 1000);
+
+        // valor inicial volumen
+        volumeSlider.value = 0.9;
+        sonido.volume = ajustarVolumen(0.80);
+
+        // cargar volumen desde localstorage si existe
+        if (savedVolume !== null) {
+            volumeSlider.value = savedVolume;
+            sonido.volume = ajustarVolumen(parseFloat(savedVolume));
+        }
+
+        // actualizar volumen mientras se mueve
+        volumeSlider.addEventListener('input', () => {
+            const linear = parseFloat(volumeSlider.value);
+            sonido.volume = ajustarVolumen(linear);
+            localStorage.setItem('pomodoro-volume', linear);
+            actualizarColorBarraVolumen(linear);
+        });
+
+        // probar sonido al soltar la barra
+        volumeSlider.addEventListener('change', () => {
+            sonido.pause();
+            sonido.currentTime = 0;
+            sonido.play().catch(err => console.warn("Error al reproducir sonido de prueba:", err));
+        });
+
+        actualizarColorBarraVolumen(volumeSlider.value);
+    }
 
     // cambia entre iniciar y pausar el temporizador
     function toggleTimer() {
@@ -115,28 +201,41 @@ document.addEventListener('DOMContentLoaded', () => {
         if (minutos === 0) return;
 
         if (!isRunning) {
-            if (timeRemaining === 0) {
+            // Si ya terminó, reinicia al tiempo correspondiente
+            if (timeRemaining <= 0) {
                 timeRemaining = minutos * 60;
             }
             isRunning = true;
-            startButton.classList.add('active'); // ← aquí
-            actualizarFondo();
+            startButton.classList.add('active');
             animarIcono(svgPause);
+            actualizarFondo();
+            clearInterval(timerInterval); // asegurarse de limpiar intervalos previos
             timerInterval = setInterval(tick, 1000);
         } else {
             clearInterval(timerInterval);
             isRunning = false;
-            startButton.classList.remove('active'); // ← y aquí
-            actualizarFondo();
+            startButton.classList.remove('active');
             animarIcono(svgPlay);
+            actualizarFondo();
         }
     }
-
 
     // reinicia el temporizador al tiempo inicial según el modo actual
     function restartTimer() {
         clearInterval(timerInterval);
-        timeRemaining = (isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput)) * 60;
+
+        switch(mode) {
+            case 'work':
+                timeRemaining = getInputMinutes(durationInput) * 60;
+                break;
+            case 'shortBreak':
+                timeRemaining = getInputMinutes(breakInput, 0) * 60;
+                break;
+            case 'longBreak':
+                timeRemaining = getInputMinutes(longBreakInput, 0) * 60;
+                break;
+        }
+
         updateClock();
         updateProgressBar();
 
@@ -148,50 +247,44 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // cambia el modo entre trabajo y descanso, reiniciando el tiempo restante
+
+    // Si quieres que el botón de adelantar también respete la lógica del descanso largo:
     function skipMode() {
-        isWorking = !isWorking;
-        timeRemaining = (isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput)) * 60;
+        switch(mode) {
+            case 'work':
+                pomodoroCount++;
+                updatePomodoroCounter();
+                if (pomodoroCount < 4) {
+                    mode = 'shortBreak';
+                    timeRemaining = getInputMinutes(breakInput, 0) * 60;
+                } else {
+                    mode = 'longBreak';
+                    timeRemaining = getInputMinutes(longBreakInput, 0) * 60;
+                    pomodoroCount = 0;
+                }
+                break;
+
+            case 'shortBreak':
+                mode = 'work';
+                timeRemaining = getInputMinutes(durationInput) * 60;
+                break;
+
+            case 'longBreak':
+                mode = 'work';
+                timeRemaining = getInputMinutes(durationInput) * 60;
+                break;
+        }
+
+        // actualizar estado según modo
+        isWorking = (mode === 'work');
+
+        // actualizar reloj, barra de progreso y color
         updateClock();
         updateProgressBar();
-        actualizarFondo();
+        actualizarFondo(); // esta función ya llama a actualizarColorBarra internamente
+        actualizarModoLabel();
     }
 
-    // función que se ejecuta cada segundo para actualizar el temporizador
-    function tick() {
-        if (timeRemaining > 0) {
-            timeRemaining--;
-            updateClock();
-            updateProgressBar();
-        } else {
-            progressBar.style.width = '100%';
-
-            reproducirAlarma();
-            animarCard();
-            clearInterval(timerInterval);
-            isRunning = false;
-            animarIcono(svgPlay);
-            updateClock();
-
-            setTimeout(() => {
-                isWorking = !isWorking;
-                const minutos = isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput);
-                timeRemaining = minutos * 60;
-                updateClock();
-                updateProgressBar();
-                isRunning = true;
-                actualizarFondo();
-                animarIcono(svgPause);
-                timerInterval = setInterval(tick, 1000);
-            }, 3000);
-        }
-    }
-
-    // agrega la animación inicial al cargar la tarjeta del pomodoro
-    pomodoroCardElement.classList.add('animate__animated', 'animate__fadeInDownBig');
-    setTimeout(() => {
-        pomodoroCardElement.classList.remove('animate__fadeInDownBig');
-    }, 1000);
 
     // actualiza el reloj mostrando el tiempo restante en formato mm:ss y el título de la página
     function updateClock() {
@@ -206,15 +299,26 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // actualiza la barra de progreso según el porcentaje completado del temporizador
     function updateProgressBar() {
-        const total = (isWorking ? getInputMinutes(durationInput) : getInputMinutes(breakInput)) * 60;
+        let total;
+        if (mode === 'work') {
+            total = getInputMinutes(durationInput) * 60;
+        } else if (mode === 'shortBreak') {
+            total = getInputMinutes(breakInput, 0) * 60;
+        } else if (mode === 'longBreak') {
+            total = getInputMinutes(longBreakInput, 0) * 60;
+        }
+
         const porcentaje = ((total - timeRemaining) / total) * 100;
         progressBar.style.width = `${porcentaje}%`;
     }
 
-    // actualiza el fondo y colores según el estado del temporizador y el modo actual
+
     function actualizarFondo() {
+        
+        updateProgressBar();
+        actualizarColorBarra(isWorking ? 'working' : 'breaking');
+
         document.body.classList.remove('working', 'breaking');
 
         if (!isRunning) {
@@ -233,7 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
         actualizarModoLabel();
     }
 
-    // cambia los colores de la barra de progreso y su contenedor según el modo
     function actualizarColorBarra(modo) {
         const container = document.querySelector('.progress-bar-container');
 
@@ -246,20 +349,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // obtiene el valor numérico del input asegurando que sea mínimo 1
-    function getInputMinutes(input) {
+    function getInputMinutes(input, min = 1) {
         const val = parseInt(input.value, 10);
-        return isNaN(val) || val < 1 ? 1 : val;
+        // si es un input de descanso largo o corto, min = 0
+        if (input === breakInput || input === longBreakInput) min = 0;
+        return isNaN(val) || val < min ? min : val;
     }
 
-    // convierte segundos a formato mm:ss para mostrar en el reloj
+
     function formatTime(seconds) {
         const m = Math.floor(seconds / 60).toString().padStart(2, '0');
         const s = (seconds % 60).toString().padStart(2, '0');
         return `${m}:${s}`;
     }
 
-    // anima el icono del botón de inicio/pausa con un fade
     function animarIcono(svg) {
         iconSpan.style.opacity = 0;
         setTimeout(() => {
@@ -268,24 +371,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 200);
     }
 
-    // anima un botón con una pequeña contracción al hacer clic
     function animarBoton(boton) {
         boton.classList.remove('shrink');
         void boton.offsetWidth;
         boton.classList.add('shrink');
     }
 
-    // reproduce el sonido de alarma, manejando posibles errores
     function reproducirAlarma() {
         sonido.pause();
         sonido.currentTime = 0;
 
-        // Reproduce dos veces el audio de forma secuencial
         sonido.play()
             .then(() => {
                 return new Promise(resolve => {
                     sonido.onended = () => {
-                        sonido.onended = null; // limpia el listener para evitar bucles
+                        sonido.onended = null;
                         resolve();
                     };
                 });
@@ -297,8 +397,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => console.warn("Error al reproducir la alarma:", err));
     }
 
-
-    // anima la tarjeta del pomodoro con un efecto de sacudida y reproduce la alarma
     function animarCard() {
         reproducirAlarma();
 
@@ -311,14 +409,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // actualiza la fecha, día y hora en la interfaz, refrescando la hora cada segundo
     function updateDateTime() {
         const hoy = new Date();
         const dias = ['DOM', 'LUN', 'MAR', 'MIE', 'JUE', 'VIE', 'SAB'];
-        dateElement.textContent = hoy.toLocaleDateString('es-AR');
 
-        // solo la primera letra del día en mayúscula
-        const dia = dias[hoy.getDay()];
+        const dia = hoy.getDate().toString().padStart(2, '0');
+        const mes = (hoy.getMonth() + 1).toString().padStart(2, '0'); // +1 porque los meses van de 0 a 11
+        const anio = hoy.getFullYear();
+
+        dateElement.textContent = `${dia}/${mes}/${anio}`;
         dayElement.textContent = dias[hoy.getDay()];
 
         function actualizarHora() {
@@ -326,88 +425,110 @@ document.addEventListener('DOMContentLoaded', () => {
             hourElement.textContent = ahora.toLocaleTimeString('es-AR', {
                 hour12: false,
                 hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
+                minute: '2-digit'
             });
         }
-
         actualizarHora();
         setInterval(actualizarHora, 1000);
     }
 
-    // limita el largo del valor del input a máximo 2 caracteres
+
     function limitarLargoInput(input) {
         if (input.value.length > 2) {
             input.value = input.value.slice(0, 2);
         }
     }
 
-    // limita el valor numérico máximo del input según el parámetro max
     function limitarValor(input, max) {
         const val = parseInt(input.value, 10);
         if (!isNaN(val) && val > max) input.value = max;
     }
 
-    // bloquea la entrada de caracteres no numéricos en los inputs
     function bloquearCaracteresInvalidos(e) {
         const k = e.key;
         const valid = ['Backspace', 'Delete', 'ArrowLeft', 'ArrowRight', 'Tab', 'Enter'];
         if (!/^\d$/.test(k) && !valid.includes(k)) e.preventDefault();
     }
 
-    // valida que al pegar solo se permita texto numérico en los inputs
     function validarPegado(e) {
         const txt = (e.clipboardData || window.clipboardData).getData('text');
         if (!/^\d+$/.test(txt)) e.preventDefault();
     }
 
-    // actualiza el texto del label que indica el modo actual
     function actualizarModoLabel() {
-        modeLabel.textContent = isWorking ? 'Tiempo de estudiar...' : 'Tiempo de descansar...';
+        switch(mode) {
+            case 'work':
+                modeLabel.textContent = 'Tiempo de estudiar...';
+                break;
+            case 'shortBreak':
+                modeLabel.textContent = 'Tiempo de descansar...';
+                break;
+            case 'longBreak':
+                modeLabel.textContent = 'Descanso largo...';
+                break;
+        }
     }
 
-    
 
-    // función para ajustar el volumen exponencialmente
+
     function ajustarVolumen(linearValue) {
         return Math.pow(linearValue, 2);
     }
-
-    // valor inicial
-    volumeSlider.value = 0.80;
-    sonido.volume = ajustarVolumen(0.80);
-
-    // cargar volumen desde localstorage si existe
-    if (savedVolume !== null) {
-        volumeSlider.value = savedVolume;
-        sonido.volume = ajustarVolumen(parseFloat(savedVolume));
-    }
-
-    // actualizar volumen mientras se mueve
-    volumeSlider.addEventListener('input', () => {
-        const linear = parseFloat(volumeSlider.value);
-        sonido.volume = ajustarVolumen(linear);
-        localStorage.setItem('pomodoro-volume', linear);
-    });
-
-    // probar sonido al soltar la barra
-    volumeSlider.addEventListener('change', () => {
-        sonido.pause();
-        sonido.currentTime = 0;
-        sonido.play().catch(err => console.warn("Error al reproducir sonido de prueba:", err));
-    });
 
     function actualizarColorBarraVolumen(valor) {
         const porcentaje = valor * 100;
         volumeSlider.style.background = `linear-gradient(to right, #e77c5b ${porcentaje}%, #f5c6b1 ${porcentaje}%)`;
     }
-    actualizarColorBarraVolumen(volumeSlider.value);
 
-    volumeSlider.addEventListener('input', () => {
-        const linear = parseFloat(volumeSlider.value);
-        sonido.volume = ajustarVolumen(linear);
-        localStorage.setItem('pomodoro-volume', linear);
-        actualizarColorBarraVolumen(linear);
-    });
+    let mode = 'work'; // modos: 'work', 'shortBreak', 'longBreak'
+    let pomodoroCount = 0;
+    updatePomodoroCounter();
+    function tick() {
+        if (timeRemaining > 0) {
+            timeRemaining--;
+            updateClock();
+            updateProgressBar();
+        } else {
+            reproducirAlarma();
+            animarCard();
+
+            if (mode === 'work') {
+                pomodoroCount++;
+                
+                if (pomodoroCount < 4) {
+                    // Pomodoros 1,2,3 → descanso corto
+                    mode = 'shortBreak';
+                    timeRemaining = getInputMinutes(breakInput, 0) * 60;
+                } else {
+                    // Pomodoro 4 → descanso largo Y reiniciar contador
+                    mode = 'longBreak';
+                    timeRemaining = getInputMinutes(longBreakInput, 0) * 60;
+                    pomodoroCount = 0; // Reiniciar contador inmediatamente
+                }
+                updatePomodoroCounter(); // Actualizar display UNA sola vez
+            } else if (mode === 'shortBreak') {
+                // Después de descanso corto → Pomodoro
+                mode = 'work';
+                timeRemaining = getInputMinutes(durationInput) * 60;
+            } else if (mode === 'longBreak') {
+                // Después de descanso largo → volver al primer pomodoro
+                mode = 'work';
+                timeRemaining = getInputMinutes(durationInput) * 60;
+                // pomodoroCount ya es 0 en este punto
+            }
+
+            isWorking = (mode === 'work');
+            updateClock();
+            updateProgressBar();
+            actualizarFondo();
+            actualizarModoLabel();
+        }
+    }
+
+
+    function updatePomodoroCounter() {
+        pomodoroCounterElement.textContent = `Pomodoros: ${pomodoroCount}`;
+    }
+
 
 });

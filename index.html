@@ -28,7 +28,7 @@
                         <h1 class="title">RELOJ POMODORO</h1>
                     </div>
                     <div class="container-clock">
-                        <h2 class="clock">00:00</h2>
+                        <h2 class="clock"></h2>
                         <span class="white-line"></span>
                     </div>
                     <div class="container-datetime">
@@ -37,6 +37,7 @@
                         <p class="hour"></p>
                     </div>
                     <p class="mode-label">Tiempo de estudiar...</p>
+                    <p class="pomodoro-counter">Pomodoros: 0</p>
                 </section>
                 <div class="progress-bar-container">
                     <div class="progress-bar"></div>
@@ -44,18 +45,26 @@
                 <section class="container-inferior">
                     <div class="container-input">
                         <label for="duration">Duración</label>
-                        <input id="duration" type="number" name="duration" list="options-duration" min="1" max="50" value="25">
+                        <input id="duration" type="text" name="duration" list="options-duration" min="1" max="50" value="25">
                         <datalist id="options-duration">
                             <option value="25">
                             <option value="50">
                         </datalist>
                     </div>
                     <div class="container-input">
-                        <label for="break">Descanso</label>
-                        <input id="break" type="number" name="break" list="options-break" min="1" max="25" value="5">
+                        <label for="break">Descanso corto</label>
+                        <input id="break" type="text" name="break" list="options-break" min="0" max="25" value="5">
                         <datalist id="options-break">
                             <option value="5">
-                            <option value="25">
+                            <option value="10">
+                        </datalist>
+                    </div>
+                    <div class="container-input">
+                        <label for="long-break">Descanso largo</label>
+                        <input id="long-break" type="text" name="long-break" list="options-long-break" min="0" max="50" value="15">
+                        <datalist id="options-long-break">
+                            <option value="15">
+                            <option value="30">
                         </datalist>
                     </div>
                     <div class="container-volume">
